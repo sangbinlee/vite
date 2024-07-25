@@ -3,10 +3,7 @@
 This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
 Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
-"# vite" 
-
-
-
+"# vite"
 
 # set up
 
@@ -79,3 +76,58 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
     To https://github.com/sangbinlee/vite.git
     * [new branch]      main -> main
     branch 'main' set up to track 'origin/main'.
+
+# vi tip - 자동정렬
+
+    1. shift + v
+    2. 방향키로 라인 선택
+    3. \=
+    4. 자동정렬 완료
+
+# preview setting
+
+    server {
+        server_name vite.sodi9.store;
+        root /var/www/vite;
+        index index.html;
+
+        # location / {
+        #        try_files $uri $uri/ =404;
+        #}
+
+        listen [::]:443 ssl ipv6only=on; # managed by Certbot
+        listen 443 ssl; # managed by Certbot
+        ssl_certificate /etc/letsencrypt/live/vite.sodi9.store/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/vite.sodi9.store/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+        location / {
+
+                proxy_set_header        Host $host;
+                proxy_set_header        X-Real-IP $remote_addr;
+                proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header        X-Forwarded-Proto $scheme;
+
+                # Fix the "It appears that your reverse proxy set up is broken" error.
+                proxy_pass          http://127.0.0.1:3004;
+                proxy_read_timeout  90;
+        }
+    }
+
+    server {
+            if ($host = vite.sodi9.store) {
+                    return 301 https://$host$request_uri;
+            } # managed by Certbot
+
+
+            listen 80;
+            listen [::]:80;
+            server_name vite.sodi9.store;
+            return 301 https://$host$request_uri;
+
+    }
+
+# restart nginx
+
+    sudo systemctl restart nginx
