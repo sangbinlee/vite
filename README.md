@@ -131,3 +131,8 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 # restart nginx
 
     sudo systemctl restart nginx
+
+# https://jenkins.sodi9.store/job/vite/configure
+
+    Build Triggers
+        GitHub hook trigger for GITScm polling
